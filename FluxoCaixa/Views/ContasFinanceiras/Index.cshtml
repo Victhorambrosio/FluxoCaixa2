@@ -1,0 +1,47 @@
+﻿@model IEnumerable<FluxoCaixa.Models.ContaFinanceira>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1 class="text-center">Tipo de Contas</h1>
+
+<form asp-action="Index" method="get" class="d-flex justify-content-center mb-4">
+	<input type="text" name="searchString" value="@Context.Request.Query["searchString"]"
+		   class="form-control w-25 me-2" placeholder="Buscar por nome da conta..." />
+	<button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+<p>
+	<a asp-action="Create" class="btn btn-success">Criar Novo</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Nome)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Saldo)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Nome)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Saldo)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.ContaFinanceiraId" class="btn btn-primary">Editar</a>
+					<a asp-action="Delete" asp-route-id="@item.ContaFinanceiraId" class="btn btn-danger">Deletar</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

@@ -1,0 +1,109 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+
+	var dadosGrafico = ViewData["Grafico"] as GraficoDTO;
+	var listaDadosConta = ViewData["ListaGraficoConta"] as List<GraficoContaDTO>;
+
+	// Esses dados normalmente viriam do Controller (ViewBag),
+	// mas aqui vamos simular para fins de exemplo.
+	var totalReceber = dadosGrafico.TotalReceber;
+	var totalPagar = dadosGrafico.TotalPagar;
+	var saldo = totalReceber - totalPagar;
+
+	// Use diretamente a lista já tipada
+	var dadosPorConta = listaDadosConta?.ToArray() ?? Array.Empty<GraficoContaDTO>();
+}
+
+<div class="text-center my-5">
+	<h1 class="display-4 fw-bold text-primary">Bem-vindo!</h1>
+	<h3 class="text-secondary">📊 Seu Dashboard de Fluxo de Caixa</h3>
+</div>
+
+<div class="container mt-4">
+	<div class="row text-center mb-4">
+		<div class="col-md-4">
+			<div class="card shadow-sm p-3">
+				<h5>Entradas (Receber)</h5>
+				<h3 class="text-success">R$ @totalReceber.ToString("N2")</h3>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="card shadow-sm p-3">
+				<h5>Saídas (Pagar)</h5>
+				<h3 class="text-danger">R$ @totalPagar.ToString("N2")</h3>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="card shadow-sm p-3">
+				<h5>Saldo</h5>
+				<h3 class="@(saldo >= 0 ? "text-success" : "text-danger")">R$ @saldo.ToString("N2")</h3>
+			</div>
+		</div>
+	</div>
+
+	<canvas id="fluxoChart" height="100"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+	const pagar = @((int)dadosGrafico.TotalPagar);
+	const receber = @((int)dadosGrafico.TotalReceber);
+
+	const ctx = document.getElementById('fluxoChart').getContext('2d');
+
+	const labels = [
+	@for (int i = 0; i < dadosPorConta.Length; i++)
+	{
+		var item = dadosPorConta[i];
+		@: "@item.Nome"@(i < dadosPorConta.Length - 1 ? "," : "")
+	}
+	];
+
+	const dataReceber = [
+	@for (int i = 0; i < dadosPorConta.Length; i++)
+	{
+		var item = dadosPorConta[i];
+		@: @item.TotalReceber@(i < dadosPorConta.Length - 1 ? "," : "")
+	}
+	];
+
+	const dataPagar = [
+	@for (int i = 0; i < dadosPorConta.Length; i++)
+	{
+		var item = dadosPorConta[i];
+		@: @item.TotalPagar@(i < dadosPorConta.Length - 1 ? "," : "")
+	}
+	];
+
+	new Chart(ctx, {
+		type: 'bar',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Receber',
+					data: dataReceber,
+					backgroundColor: 'rgba(75, 192, 192, 0.6)',
+				},
+				{
+					label: 'Pagar',
+					data: dataPagar,
+					backgroundColor: 'rgba(255, 99, 132, 0.6)',
+				}
+			]
+		},
+		options: {
+			responsive: true,
+			plugins: {
+				legend: { position: 'top' },
+				title: { display: true, text: 'Fluxo de Caixa Mensal' }
+			},
+			scales: {
+				y: { beginAtZero: true }
+			}
+		}
+	});
+</script>
+

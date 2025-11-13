@@ -1,0 +1,53 @@
+﻿@model FluxoCaixa.Models.Conta
+
+@{
+	ViewData["Title"] = "Create";
+}
+<h1 class="text-dark text-center">Adicionar<span class="fw-bold"> Conta</span></h1>
+<hr />
+<div class="row">
+	<div class="col-12">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Nome" class="control-label"></label>
+				<input asp-for="Nome" class="form-control" />
+				<span asp-validation-for="Nome" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Valor" class="control-label"></label>
+				<input asp-for="Valor" class="form-control" />
+				<span asp-validation-for="Valor" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="DataVencimento" class="control-label"></label>
+				<input type="date" asp-for="DataVencimento" class="form-control" />
+				<span asp-validation-for="DataVencimento" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="hidden" value="false" asp-for="Pago" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label asp-for="TipoContaId" class="control-label"></label>
+				<select asp-for="TipoContaId" class="form-control" asp-items="ViewBag.TipoContaId"></select>
+			</div>
+			<div class="row gap-3 mt-3 mb-3">
+				<div class="col-12 d-flex justify-content-between">
+					<div>
+						<a asp-action="Index" class="btn btn-danger">Cancelar</a>
+					</div>
+
+					<div class="form-group">
+						<input type="submit" value="Criar" class="btn btn-primary" />
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

@@ -1,0 +1,46 @@
+﻿@model FluxoCaixa.Models.TipoConta
+
+@{
+	ViewData["Title"] = "Create";
+}
+
+<h1 class="text-dark text-center">Adicionar<span class="fw-bold"> Conta</span></h1>
+<hr />
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Nome" class="control-label"></label>
+				<input asp-for="Nome" class="form-control" />
+				<span asp-validation-for="Nome" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Tipo" class="control-label"></label>
+				<select asp-for="Tipo" class="form-control">
+					<option value="">Selecione uma opção...</option>
+					<option value="P">A Pagar</option>
+					<option value="R">A receber</option>
+				</select>
+				<span asp-validation-for="Tipo" class="text-danger"></span>
+			</div>
+			<div class="row gap-3 mt-3 mb-3">
+				<div class="col-12 d-flex justify-content-between">
+					<div>
+						<a asp-action="Index" class="btn btn-danger">Cancelar</a>
+					</div>
+
+					<div class="form-group">
+						<input type="submit" value="Criar" class="btn btn-primary" />
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

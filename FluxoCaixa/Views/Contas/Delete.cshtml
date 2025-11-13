@@ -1,0 +1,50 @@
+﻿@model FluxoCaixa.Models.Conta
+
+@{
+	ViewData["Title"] = "Delete";
+}
+
+<h1>Deletar</h1>
+<h3>Deseja Deletar este item?</h3>
+<div>
+	<h4>Conta</h4>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Nome)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Nome)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Valor)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Valor)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.DataVencimento)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.DataVencimento)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Pago)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Pago)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.TipoConta)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.TipoConta.Nome)
+		</dd>
+	</dl>
+
+	<form asp-action="Delete">
+		<input type="hidden" asp-for="ContaId" />
+		<input type="submit" value="Delete" class="btn btn-danger" /> |
+		<a asp-action="Index" class="btn btn-primary">Voltar a Lista</a>
+	</form>
+</div>
