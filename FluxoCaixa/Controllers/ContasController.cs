@@ -22,27 +22,24 @@ namespace FluxoCaixa.Controllers
         // GET: Contas
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Conta.Include(c => c.TipoConta);
+            var applicationDbContext = _context.Conta.OrderBy(cf => cf.Nome).Include(c => c.TipoConta);
             return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Contas/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Index(string busca)
         {
-            if (id == null)
+
+            var Contitas = _context.Conta.AsQueryable();
+
+            if (!string.IsNullOrEmpty(busca))
             {
-                return NotFound();
+                Contitas = Contitas.Where(l => l.Nome.Contains(busca));
             }
 
-            var conta = await _context.Conta
-                .Include(c => c.TipoConta)
-                .FirstOrDefaultAsync(m => m.ContaId == id);
-            if (conta == null)
-            {
-                return NotFound();
-            }
+            ViewData["termoBusca"] = busca;
+            return View(await Contitas.OrderBy(l => l.Nome).ToListAsync());
 
-            return View(conta);
         }
 
         // GET: Contas/Create

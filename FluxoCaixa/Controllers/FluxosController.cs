@@ -30,24 +30,19 @@ namespace FluxoCaixa.Controllers
         }
 
         // GET: Fluxos/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Index(string busca)
         {
-            if (id == null)
+
+            var listaContas = _context.Fluxo.AsQueryable();
+
+            if (!string.IsNullOrEmpty(busca))
             {
-                return NotFound();
+                listaContas = listaContas.Where(l => l.Conta.Contains(busca));
             }
 
-            var fluxo = await _context.Fluxo
-                .Include(f => f.Conta)
-                .Include(f => f.ContaFinanceira)
-                .Include(f => f.Usuario)
-                .FirstOrDefaultAsync(m => m.FluxoId == id);
-            if (fluxo == null)
-            {
-                return NotFound();
-            }
+            ViewData["termoBusca"] = busca;
+            return View(await listaContas.OrderBy(l => l.Conta).ToListAsync());
 
-            return View(fluxo);
         }
 
         // GET: Fluxos/Create

@@ -26,27 +26,19 @@ namespace FluxoCaixa.Controllers
         }
 
         // GET: TiposContas/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Index(string busca)
         {
-            if (id == null)
+
+            var TipoContas = _context.TipoConta.AsQueryable();
+
+            if (!string.IsNullOrEmpty(busca))
             {
-                return NotFound();
+                TipoContas = TipoContas.Where(l => l.Nome.Contains(busca));
             }
 
-            var tipoConta = await _context.TipoConta
-                .FirstOrDefaultAsync(m => m.TipoContaId == id);
-            if (tipoConta == null)
-            {
-                return NotFound();
-            }
+            ViewData["termoBusca"] = busca;
+            return View(await TipoContas.OrderBy(l => l.Nome).ToListAsync());
 
-            return View(tipoConta);
-        }
-
-        // GET: TiposContas/Create
-        public IActionResult Create()
-        {
-            return View();
         }
 
         // POST: TiposContas/Create

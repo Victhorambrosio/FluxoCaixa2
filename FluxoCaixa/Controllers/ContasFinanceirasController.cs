@@ -20,10 +20,21 @@ namespace FluxoCaixa.Controllers
         }
 
         // GET: ContasFinanceiras  
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string busca)
         {
-            var listaContas = await _context.ContasFinanceiras.OrderBy(cf => cf.Nome).ToListAsync();
-            return View(listaContas);
+
+            var listaContas = _context.ContasFinanceiras.AsQueryable();
+
+            if (!string.IsNullOrEmpty(busca))
+            {
+                listaContas = listaContas.Where(l => l.Nome.Contains(busca));
+            }
+
+            ViewData["termoBusca"] = busca;
+            return View(await listaContas.OrderBy(l => l.Nome).ToListAsync());
+
+            //var listaContas = await _context.ContasFinanceiras.OrderBy(cf => cf.Nome).ToListAsync();
+            //return View(listaContas);
         }
 
         // GET: Produtos/Buscar  
