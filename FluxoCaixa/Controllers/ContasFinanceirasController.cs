@@ -19,13 +19,33 @@ namespace FluxoCaixa.Controllers
             _context = context;
         }
 
-        // GET: ContasFinanceiras
+        // GET: ContasFinanceiras  
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ContasFinanceiras.ToListAsync());
+            var listaContas = await _context.ContasFinanceiras.OrderBy(cf => cf.Nome).ToListAsync();
+            return View(listaContas);
         }
 
-        // GET: ContasFinanceiras/Details/5
+        // GET: Produtos/Buscar  
+        // Esta Action é chamada pelo formulário de busca.  
+        // Ela filtra os resultados e renderiza a mesma view Index.  
+        [HttpGet]
+        public async Task<IActionResult> Buscar(string busca)
+        {
+            // Guarda o termo da busca no ViewData para repopular o campo na view.  
+            ViewData["campoBusca"] = busca;
+            // Inicia a consulta base  
+            var listaContasFinanceiras = await _context.ContasFinanceiras.ToListAsync();
+            // Se o termo de busca não for nulo ou vazio, aplica o filtro  
+            if (!String.IsNullOrEmpty(busca))
+            {
+                listaContasFinanceiras = await _context.ContasFinanceiras.Where(cf => cf.Nome.Contains(busca)).OrderBy(cf => cf.Nome).ToListAsync();
+            }
+            // Retorna a view "Index", passando a lista de contas financeiras filtrados como modelo.  
+            return View("Index", listaContasFinanceiras);
+        }
+
+        // GET: ContasFinanceiras/Details/5  
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,15 +63,15 @@ namespace FluxoCaixa.Controllers
             return View(contaFinanceira);
         }
 
-        // GET: ContasFinanceiras/Create
+        // GET: ContasFinanceiras/Create  
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: ContasFinanceiras/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: ContasFinanceiras/Create  
+        // To protect from overposting attacks, enable the specific properties you want to bind to.  
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.  
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ContaFinanceiraId,Nome,Saldo")] ContaFinanceira contaFinanceira)
@@ -65,7 +85,7 @@ namespace FluxoCaixa.Controllers
             return View(contaFinanceira);
         }
 
-        // GET: ContasFinanceiras/Edit/5
+        // GET: ContasFinanceiras/Edit/5  
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,9 +101,9 @@ namespace FluxoCaixa.Controllers
             return View(contaFinanceira);
         }
 
-        // POST: ContasFinanceiras/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: ContasFinanceiras/Edit/5  
+        // To protect from overposting attacks, enable the specific properties you want to bind to.  
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.  
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ContaFinanceiraId,Nome,Saldo")] ContaFinanceira contaFinanceira)
@@ -116,7 +136,7 @@ namespace FluxoCaixa.Controllers
             return View(contaFinanceira);
         }
 
-        // GET: ContasFinanceiras/Delete/5
+        // GET: ContasFinanceiras/Delete/5  
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -134,7 +154,7 @@ namespace FluxoCaixa.Controllers
             return View(contaFinanceira);
         }
 
-        // POST: ContasFinanceiras/Delete/5
+        // POST: ContasFinanceiras/Delete/5  
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
